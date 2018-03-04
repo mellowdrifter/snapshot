@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package snapshot;
+
+service snap_shot {
+    rpc send_snap(image_data) returns (result);
+}
+
+message image_data {
+    bytes image = 1;
+    uint32 sequence = 2;
+    uint64 date_time = 3;
+    string source_host = 4;
+    string source_address = 5;
+    string image_type = 6;
+}
+
+message result {
+    bool success = 1;
+    string reply = 2;
+}
