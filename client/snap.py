@@ -6,10 +6,11 @@ import snapshot_pb2_grpc
 import time
 
 # open a channel
+# TODO - Server address should be configurable
 channel = grpc.insecure_channel('localhost:50051')
 
 # create a client
-stub = snapshot_pb2_grpc.snap_shotStub(channel)
+client = snapshot_pb2_grpc.snap_shotStub(channel)
 
 # create a message with image data
 image = snapshot_pb2.image_data(
@@ -17,6 +18,6 @@ image = snapshot_pb2.image_data(
     date_time = int(time.time()))
 
 # send the image
-result = stub.send_snap(image)
+result = client.send_snap(image)
 
 print(result.value)
