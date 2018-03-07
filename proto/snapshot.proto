@@ -13,6 +13,7 @@ message image_data {
     string source_host = 4;
     string source_address = 5;
     string image_type = 6;
+    string location = 7;
 }
 
 message result {
