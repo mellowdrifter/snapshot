@@ -3,7 +3,7 @@ syntax = "proto3";
 package snapshot;
 
 service snap_shot {
-    rpc send_snap(image_data) returns (result);
+    rpc add_snap(image_data) returns (result);
 }
 
 message image_data {
