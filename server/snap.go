@@ -28,5 +28,7 @@ func main() {
 
 func (s *server) AddSnap(ctx context.Context, id *pb.ImageData) (*pb.Result, error) {
 	log.Printf("Received something")
-	return &pb.Result{}, nil
+	return &pb.Result{
+		Reply: "I got something, but no idea what!",
+	}, nil
 }

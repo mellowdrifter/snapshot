@@ -15,9 +15,9 @@ config.read("config.ini")
 location = config.get('camera', 'location')
 server = config.get('camera', 'server')
 port = config.get('camera', 'port')
-rate = config.get('camera', 'rate')
-xres = config.get('camera', 'xres')
-yres = config.get('camera', 'yres')
+rate = int(config.get('camera', 'rate'))
+xres = int(config.get('camera', 'xres'))
+yres = int(config.get('camera', 'yres'))
 hflip = config.get('camera', 'hflip')
 vflip = config.get('camera', 'vflip')
 
@@ -31,9 +31,9 @@ client = snapshot_pb2_grpc.snap_shotStub(channel)
 # capture an image
 myImage = io.BytesIO()
 with PiCamera() as camera:
-    camera.reolution(xres, yres)
+    camera.resolution = (xres, yres)
     camera.hflip = hflip
-    camera.yflip = yflip
+    camera.vflip = vflip
     camera.start_preview()
     # Warm up camera
     time.sleep(2)
@@ -41,12 +41,12 @@ with PiCamera() as camera:
 
 # create a message with image data
 image = snapshot_pb2.image_data(
-    image = myImage,
+    image = bytes(myImage),
     sequence = 1,
     date_time = int(time.time()),
     location = location)
 
 # send the message
-result = client.send_snap(image)
+result = client.add_snap(image)
 
-print(result.value)
+print(result.reply)
