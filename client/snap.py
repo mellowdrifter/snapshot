@@ -41,7 +41,7 @@ with PiCamera() as camera:
 
 # create a message with image data
 image = snapshot_pb2.image_data(
-    image = bytes(myImage),
+    image = myImage.getvalue(),
     sequence = 1,
     date_time = int(time.time()),
     location = location)

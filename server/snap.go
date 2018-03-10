@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
 	"net"
 
@@ -27,8 +28,12 @@ func main() {
 }
 
 func (s *server) AddSnap(ctx context.Context, id *pb.ImageData) (*pb.Result, error) {
-	log.Printf("Received something")
+	log.Printf("Received an image from the camera in location %v", id.GetLocation())
+	err := ioutil.WriteFile("test.jpg", id.GetImage(), 0644)
+	if err != nil {
+		log.Fatalf("Cannot write file")
+	}
 	return &pb.Result{
-		Reply: "I got something, but no idea what!",
+		Reply: "I got something",
 	}, nil
 }
