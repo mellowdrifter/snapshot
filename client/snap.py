@@ -28,6 +28,8 @@ channel = grpc.insecure_channel(server)
 # create a client
 client = snapshot_pb2_grpc.snap_shotStub(channel)
 
+sequence = 1
+
 # capture an image
 myImage = io.BytesIO()
 with PiCamera() as camera:
@@ -48,5 +50,7 @@ image = snapshot_pb2.image_data(
 
 # send the message
 result = client.add_snap(image)
+
+sequence += 1
 
 print(result.reply)
