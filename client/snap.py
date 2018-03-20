@@ -30,27 +30,34 @@ client = snapshot_pb2_grpc.snap_shotStub(channel)
 
 sequence = 1
 
-# capture an image
-myImage = io.BytesIO()
-with PiCamera() as camera:
-    camera.resolution = (xres, yres)
-    camera.hflip = hflip
-    camera.vflip = vflip
-    camera.start_preview()
-    # Warm up camera
+while True:
+    # capture an image
+    myImage = io.BytesIO()
+    with PiCamera() as camera:
+        camera.resolution = (xres, yres)
+        camera.hflip = hflip
+        camera.vflip = vflip
+        camera.start_preview()
+        # Warm up camera
+        time.sleep(2)
+        camera.capture(myImage, 'jpeg')
+
+    # create a message with image data
+    image = snapshot_pb2.image_data(
+        image = myImage.getvalue(),
+        sequence = sequence,
+        date_time = int(time.time()),
+        location = location)
+
+    # send the message
+    try:
+        result = client.add_snap(image)
+        print("Image sent")
+    except:
+        print("Unable to send an image")
+        with open(str(int(time.time()) + ".jpg"), "w") as f:
+            f.write(myImage.getvalue())
+
+    sequence += 1
     time.sleep(2)
-    camera.capture(myImage, 'jpeg')
 
-# create a message with image data
-image = snapshot_pb2.image_data(
-    image = myImage.getvalue(),
-    sequence = 1,
-    date_time = int(time.time()),
-    location = location)
-
-# send the message
-result = client.add_snap(image)
-
-sequence += 1
-
-print(result.reply)

@@ -31,14 +31,14 @@ func main() {
 }
 
 func (s *server) AddSnap(ctx context.Context, id *pb.ImageData) (*pb.Result, error) {
-	log.Printf("Received an image from the camera in location %v", id.GetLocation())
+	log.Printf("Received an image from the camera in location %v and sequence %v", id.GetLocation(), id.GetSequence())
 	date := time.Unix(int64(id.GetDateTime()), 0)
-	folder := fmt.Sprintf("%v/%v", id.GetLocation(), date.Format("2018-03-14"))
+	folder := fmt.Sprintf("%v/%v/%v", "/home/fujitsu/snap", id.GetLocation(), date.Format("2006-01-02"))
 	if _, err := os.Stat(folder); os.IsNotExist(err) {
-		os.Mkdir(folder, 0644)
+		os.MkdirAll(folder, os.ModePerm)
 	}
 	filename := fmt.Sprintf("%v/%v.jpg", folder, id.GetSequence())
-	err := ioutil.WriteFile(filename, id.GetImage(), 0644)
+	err := ioutil.WriteFile(filename, id.GetImage(), 0666)
 	if err != nil {
 		log.Fatalf("Cannot write file")
 	}
